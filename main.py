@@ -27,7 +27,7 @@ while (opcaoMenu != 0):
         except:
             print("Arquivo não encontrado")
 
-    if opcaoMenu == 2:
+    elif opcaoMenu == 2:
         try:
             with open("contatos.txt", "a") as arquivo:
                 nomeContato = input("Digite o nome do contato: ")
@@ -52,15 +52,26 @@ while (opcaoMenu != 0):
     #     if not contatoEncontrado:
     #         print("Contato não encontrado")
     #
-    # elif opcaoMenu == 4:
-    #     buscarContato = input("Digite o email do contato que deseja buscar: ")
-    #     contatoEncontrado = False
-    #     for i in listaContatos:
-    #         if i.email == buscarContato:
-    #             print(f"nome: {i.nome} / email: {i.email} / telefone: {i.telefone}")
-    #             contatoEncontrado = True
-    #             continue
+    elif opcaoMenu == 4:
+        buscarContato = input("Digite o email do contato que deseja buscar: ")
+        contatoEncontrado = False
+        try:
+            with open("contatos.txt", "r") as arquivo:
+                listaContatos = arquivo.readlines()
+                for contatos in listaContatos:
+                    dados = (contatos.split('-'))
+                    if dados[1][1:-1] == buscarContato:
+                        novoContato = Contato(dados[0][:-1], dados[1][1:-1],dados[2][1:-1])
+                        print(f"nome: {novoContato.nome} | email: {novoContato.email} | telefone: {novoContato.telefone}")
+                        contatoEncontrado = True
+                        break
+            if not contatoEncontrado:
+                print("Contato não encontrado")
+        except FileNotFoundError:
+            print("Arquivo não encontrado")
+
     else:
         print("opcao invalida")
+
 else:
     print("Obrigado por usar a agenda de contatos")
