@@ -16,9 +16,16 @@ while (opcaoMenu != 0):
     print("0. Sair")
     opcaoMenu = int(input("Digite a opção desejada: "))
 
-    # if opcaoMenu == 1:
-    #     for contatos in listaContatos:
-    #         print(f"nome: {contatos.nome} / email: {contatos.email} / telefone: {contatos.telefone}")
+    if opcaoMenu == 1:
+        try:
+            with open("contatos.txt", "r") as arquivo:
+                listaContatos = arquivo.readlines()
+                for contatos in listaContatos:
+                    dados = (contatos.split('-'))
+                    novoContato = Contato(dados[0][:-1], dados[1][1:-1], dados[2][1:-1])
+                    print(f"nome: {novoContato.nome} | email: {novoContato.email} | telefone: {novoContato.telefone}")
+        except:
+            print("Arquivo não encontrado")
 
     if opcaoMenu == 2:
         try:
