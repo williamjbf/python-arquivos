@@ -1,12 +1,10 @@
-from contato import Contato
+from arquivoService import *
 
 print("-" * 30)
 print(("-" * 3) + " Agenda de contatos " + ("-" * 3))
 print("-" * 30)
 
 opcaoMenu = 1
-# listaContatos = list()
-
 
 while (opcaoMenu != 0):
     print("1. Listar contatos")
@@ -17,67 +15,33 @@ while (opcaoMenu != 0):
     opcaoMenu = int(input("Digite a opção desejada: "))
 
     if opcaoMenu == 1:
-        try:
-            with open("contatos.txt", "r") as arquivo:
-                listaContatos = arquivo.readlines()
-                for i in listaContatos:
-                    dados = (i.split('-'))
-                    novoContato = Contato(dados[0][:-1], dados[1][1:-1], dados[2][1:-1])
-                    print(f"nome: {novoContato.nome} | email: {novoContato.email} | telefone: {novoContato.telefone}")
-        except:
-            print("Arquivo não encontrado")
+        contatos = listarContatos()
+        for contato in contatos:
+            print(f"nome: {contato.nome} | email: {contato.email} | telefone: {contato.telefone}")
 
     elif opcaoMenu == 2:
-        try:
-            with open("contatos.txt", "a") as arquivo:
-                nomeContato = input("Digite o nome do contato: ")
-                emailContato = input("Digite o email do contato: ")
-                telefoneContato = input("Digite o telefone do contato: ")
-                novoContato = Contato(nomeContato, emailContato, telefoneContato)
-                arquivo.write(f"{novoContato.nome} - {novoContato.email} - {novoContato.telefone} \n")
-            print(arquivo.closed)
-        except FileNotFoundError:
-            print("Arquivo não encontrado")
-        # listaContatos.append(novoContato)
-
+        nomeContato = input("Digite o nome do contato: ")
+        emailContato = input("Digite o email do contato: ")
+        telefoneContato = input("Digite o telefone do contato: ")
+        novoContato = Contato(nomeContato, emailContato, telefoneContato)
+        if cadastrarContato(novoContato):
+            print("Contato cadastrado com sucesso")
+        else:
+            print("Contato já cadastrado")
     elif opcaoMenu == 3:
-        try:
-            contatoARemover = input("Digite o email do contato que deseja remover: ")
-            contatoEncontrado = False
-            with open("contatos.txt", "r") as arquivo:
-                listaContatos = arquivo.readlines()
-                contatos = list()
-                for i in listaContatos:
-                    dados = (i.split('-'))
-                    if dados[1][1:-1] == contatoARemover:
-                        contatoEncontrado = True
-                    if dados[1][1:-1] != contatoARemover:
-                        contatos.append(f"{dados[0]}-{dados[1]}-{dados[2]}")
-            with open("contatos.txt", "w") as arquivo:
-                arquivo.writelines(contatos)
-            if not contatoEncontrado:
-                print("Contato não encontrado")
-        except:
-            print("Arquivo não encontrado")
+        contatoARemover = input("Digite o email do contato que deseja remover: ")
+        contatoRemovido = removerContatoEmail(contatoARemover)
+        if contatoRemovido:
+            print("Contato removido com sucesso")
+        else:
+            print("Contato não encontrado")
     elif opcaoMenu == 4:
-        try:
-            buscarContato = input("Digite o email do contato que deseja buscar: ")
-            contatoEncontrado = False
-            with open("contatos.txt", "r") as arquivo:
-                listaContatos = arquivo.readlines()
-                for i in listaContatos:
-                    dados = (i.split('-'))
-                    if dados[1][1:-1] == buscarContato:
-                        novoContato = Contato(dados[0][:-1], dados[1][1:-1], dados[2][1:-1])
-                        print(
-                            f"nome: {novoContato.nome} | email: {novoContato.email} | telefone: {novoContato.telefone}")
-                        contatoEncontrado = True
-                        break
-            if not contatoEncontrado:
-                print("Contato não encontrado")
-        except FileNotFoundError:
-            print("Arquivo não encontrado")
-
+        buscarContato = input("Digite o email do contato que deseja buscar: ")
+        contatoEncontrado = buscarContatoEmail(buscarContato)
+        if contatoEncontrado:
+            print(f"nome: {contatoEncontrado.nome} | email: {contatoEncontrado.email} | telefone: {contatoEncontrado.telefone}")
+        else:
+            print("Contato não encontrado")
     else:
         print("opcao invalida")
 
